@@ -1,0 +1,34 @@
+---
+- name: My First Playbook
+  hosts: ec2-18-232-154-147.compute-1.amazonaws.com
+  gather_facts: true
+  become: yes
+  vars_files:
+    - "vars.yaml"
+
+  tasks:
+
+  - name: installing the latest version of apache
+    yum:
+      name: httpd
+      state: latest
+
+  - name: start service httpd, if not started
+    ansible.builtin.service:
+      name: httpd
+      state: started
+
+  - name: change default index file # ansible localhost -m file a "path=/var/www/html/index.html state=absent"
+    file:
+      path: /var/www/html/index.html
+      state: absent
+  
+  - name: add index file # ansible localhost -m file a "path=/var/www/html/index.html state=touch"
+    file:
+      path: /var/www/html/index.html
+      state: touch
+
+  - name: add line in file
+    lineinfile:
+      path: /var/www/html/index.html
+      line: <h1>This is my site</h1>
